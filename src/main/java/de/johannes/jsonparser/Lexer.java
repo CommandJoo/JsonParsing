@@ -9,8 +9,8 @@ import java.util.List;
 
 public class Lexer {
 
-    public static List<Token> lexer(LinkedList<Character> input) {
-        List<Token> result = new ArrayList<>();
+    public static LinkedList<Token> lexer(LinkedList<Character> input) {
+        LinkedList<Token> result = new LinkedList<>();
 
         while(!input.isEmpty()) {
             Character first = input.getFirst();
@@ -70,11 +70,12 @@ public class Lexer {
                         result.add(new Token(TokenType.BOOLEAN, "true"));
                     }else if(word.equals("false")) {
                         result.add(new Token(TokenType.BOOLEAN, "false"));
-                    }else{
-                        continue;
+                    }else if(word.equals("null")) {
+                        result.add(new Token(TokenType.NULL, null));
                     }
+                }else {
+                    input.removeFirst();
                 }
-                input.removeFirst();
             }
         }
         result.add(new Token(TokenType.END_OF_FILE, null));

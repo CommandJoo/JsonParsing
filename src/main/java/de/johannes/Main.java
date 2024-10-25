@@ -1,7 +1,10 @@
 package de.johannes;
 
+import de.johannes.json.JsonComponent;
+import de.johannes.json.JsonObject;
 import de.johannes.jsonparser.FileUtil;
 import de.johannes.jsonparser.Lexer;
+import de.johannes.jsonparser.Parser;
 import de.johannes.jsonparser.token.Token;
 
 import java.util.LinkedList;
@@ -12,7 +15,9 @@ import java.util.List;
 public class Main {
     public static void main(String[] args) throws Exception {
         LinkedList<Character> input = FileUtil.readFile("input.json");
-        List<Token> tokens = Lexer.lexer(input);
-        Lexer.listTokens(tokens);
+        LinkedList<Token> tokens = Lexer.lexer(input);
+//        Lexer.listTokens(tokens);
+        JsonComponent component = Parser.parse(tokens);
+        FileUtil.writeFile(component.toString(), "output.json");
     }
 }

@@ -21,4 +21,16 @@ public class FileUtil {
         return result;
     }
 
+    public static void writeFile(String content, String location) throws IOException {
+        File output = new File(location);
+        if(!output.exists()) {
+            output.createNewFile();
+        }
+
+        BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(output)));
+        writer.write(content);
+        writer.flush();
+        writer.close();
+    }
+
 }
