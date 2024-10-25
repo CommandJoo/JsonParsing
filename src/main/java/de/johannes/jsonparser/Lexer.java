@@ -78,7 +78,6 @@ public class Lexer {
                 }
             }
         }
-        result.add(new Token(TokenType.END_OF_FILE, null));
 
         return result;
     }

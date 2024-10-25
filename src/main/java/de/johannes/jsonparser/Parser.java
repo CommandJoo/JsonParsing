@@ -53,7 +53,9 @@ public class Parser {
             return new JsonComponent(Float.valueOf(tokens.removeFirst().content()));
         }  else if(tokens.getFirst().type() == TokenType.TEXT) {
             return new JsonComponent(tokens.removeFirst().content());
-        } else {
+        } else if(tokens.getFirst().type() == TokenType.NULL) {
+            return new JsonComponent(null);
+        }else {
             throw new Exception("Couldn't find Type: "+tokens.getFirst().type());
         }
         return null;

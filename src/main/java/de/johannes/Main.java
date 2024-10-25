@@ -1,23 +1,21 @@
 package de.johannes;
 
-import de.johannes.json.JsonComponent;
-import de.johannes.json.JsonObject;
-import de.johannes.jsonparser.FileUtil;
-import de.johannes.jsonparser.Lexer;
-import de.johannes.jsonparser.Parser;
-import de.johannes.jsonparser.token.Token;
+import joptsimple.OptionParser;
+import joptsimple.OptionSet;
+import joptsimple.OptionSpec;
 
-import java.util.LinkedList;
-import java.util.List;
+import java.io.File;
 
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class Main {
     public static void main(String[] args) throws Exception {
-        LinkedList<Character> input = FileUtil.readFile("input.json");
-        LinkedList<Token> tokens = Lexer.lexer(input);
-//        Lexer.listTokens(tokens);
-        JsonComponent component = Parser.parse(tokens);
-        FileUtil.writeFile(component.toString(), "output.json");
+        OptionParser parser = new OptionParser();
+        OptionSpec<File> file2 = parser.accepts("f").withRequiredArg().ofType(File.class);
+
+        OptionSet options = parser.parse(args);
+        if(options.has(file2)) {
+            System.out.println(JsonParser.parseFile(options.valueOf(file2).getAbsolutePath()));
+        }
     }
 }

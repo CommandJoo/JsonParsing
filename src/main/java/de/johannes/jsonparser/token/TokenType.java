@@ -8,6 +8,4 @@ public enum TokenType {
 
     TEXT, NUMBER, BOOLEAN, NULL,
 
-    END_OF_FILE
-
 }

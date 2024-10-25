@@ -17,7 +17,6 @@ public class JsonArray extends JsonComponent{
             throw new IllegalStateException("Expected List of JsonArray but got: "+super.content().getClass().getSimpleName());
         }
         ArrayList<?> contents = ((ArrayList<?>) super.content());
-        System.out.println(contents.getClass());
         ((ArrayList<?>) super.content()).forEach(entry -> {
             if(!(entry instanceof JsonComponent) && entry != null) {
                 throw new IllegalArgumentException("Expected content of JsonArray to be of type JsonComponent but got: "+entry.getClass().getSimpleName());
@@ -26,6 +25,14 @@ public class JsonArray extends JsonComponent{
             }
         });
         return list;
+    }
+
+    public JsonComponent get(int i) {
+        if(i < content().size()) {
+            return content().get(i);
+        }else {
+            throw new IndexOutOfBoundsException("Size of JsonArray is: "+content().size()+", given index: "+i);
+        }
     }
 
     @Override
