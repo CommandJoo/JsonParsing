@@ -7,19 +7,30 @@ import joptsimple.OptionSet;
 import joptsimple.OptionSpec;
 
 import java.io.File;
+import java.util.Arrays;
 
 public class Main {
     public static void main(String[] args) throws Exception {
-        OptionParser parser = new OptionParser();
-        OptionSpec<File> file2 = parser.accepts("f").withRequiredArg().ofType(File.class);
-        OptionSpec<Void> pretty = parser.accepts("pretty");
+        OptionParser parser = new OptionParser() {
+            {
+                acceptsAll(Arrays.asList("help", "h", "?"), "Shows the help menu").forHelp();
+                accepts("file", "The input file").requiredUnless("help").withRequiredArg().ofType(File.class).describedAs("f");
+                accepts("pretty", "If the json should be formatted");
+                accepts("indent", "The Indentation of the formatted Json").withRequiredArg().ofType(Integer.class);
+                accepts("color", "If the json should be color coded");
+            }
+        };
         OptionSet options = parser.parse(args);
-
-        JsonParser jsonParser = new JsonParser(4, options.has(pretty));
-        if(options.has(file2)) {
-            jsonParser.printFile(options.valueOf(file2).getAbsolutePath());
-        }else{
-            System.out.println("No file Specified!");
+        if(options.has("help")) {
+            parser.printHelpOn(System.out);
+        }else {
+            JsonParser jsonParser = new JsonParser(options.has("indent") ? (Integer)options.valueOf("indent") : 4, options.has("pretty"), options.has("color"));
+            if(options.has("file")) {
+                jsonParser.printFile(((File)options.valueOf("file")).getAbsolutePath());
+            }else{
+                System.out.println("No file Specified!");
+            }
         }
+
     }
 }

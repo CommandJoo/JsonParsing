@@ -1,5 +1,6 @@
 package de.johannes.json;
 
+import java.awt.*;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -32,26 +33,30 @@ public class JsonObject extends JsonComponent{
     }
 
     @Override
-    public String stringify(String keyName, int level, boolean pretty, int indent) {
+    public String stringify(String keyName, int level, boolean pretty, int indent, boolean colored) {
         StringBuilder str = new StringBuilder();
         //added necessary amount of space
         String indentation = " ".repeat(indent);
         String finalIndentation = pretty ? indentation.repeat(level) : "";
         str.append(finalIndentation);
         //added key if not null
+        str.append(consoleColor(new Color(50, 50, 255),colored));
         str.append((keyName != null) ? "\""+keyName+"\":" : "");
         str.append(pretty && keyName != null ? " " : "");//space after colon
+        str.append(consoleColor(new Color(150, 150, 255),colored));
         str.append("{");
         str.append(pretty ? "\n" : "");
 
         int count = 0;
         for(String key : content().keySet()) {
             count++;
-            str.append(get(key).stringify(key, level+1, pretty, indent));
+            str.append(get(key).stringify(key, level+1, pretty, indent, colored));
+            str.append(consoleColor(new Color(150, 150, 255),colored));
             str.append(count < content().keySet().size() ? "," : "");
             str.append(pretty ? "\n" : "");
         }
         str.append(finalIndentation);
+        str.append(consoleColor(new Color(150, 150, 255),colored));
         str.append("}");
         return str.toString();
     }
