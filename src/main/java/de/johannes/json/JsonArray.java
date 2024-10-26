@@ -36,15 +36,30 @@ public class JsonArray extends JsonComponent{
     }
 
     @Override
-    public String stringify(String key, int indent) {
+    public String stringify(String key, int level, boolean pretty, int indent) {
         StringBuilder str = new StringBuilder();
-        str.append("  ".repeat(indent)).append(key != null ? "\"" + key + "\": " : "").append("[\n");
+        //added necessary amount of spaces
+        String indentation = " ".repeat(indent);
+        String finalIndentation = pretty ? indentation.repeat(level) : "";
+        str.append(finalIndentation);
+        //added key if not null
+        str.append(key != null ? "\"" + key + "\":" : "");
+        str.append(pretty && key != null ? " " : "");//space after colon
+        str.append("[");
+        str.append(pretty ? "\n" : "");
+
         int count = 0;
         for (JsonComponent entry : content()) {
             count++;
-            str.append(entry != null ? entry.stringify(null, indent + 1) : "  ".repeat(indent + 1) + "Invalid").append(count < content().size() ? "," : "").append("\n");
+            str.append(entry != null ?
+                    entry.stringify(null, level + 1, pretty, indent) :
+                    "  ".repeat(level + 1) + "Invalid"
+            );
+            str.append(count < content().size() ? "," : "");
+            str.append(pretty ? "\n" : "");
         }
-        str.append("  ".repeat(indent)).append("]");
+        str.append(finalIndentation);
+        str.append("]");
         return str.toString();
     }
 

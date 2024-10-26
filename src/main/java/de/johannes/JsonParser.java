@@ -5,11 +5,23 @@ import de.johannes.jsonparser.FileUtil;
 import de.johannes.jsonparser.Lexer;
 import de.johannes.jsonparser.Parser;
 
-import java.io.File;
 import java.util.LinkedList;
-import java.util.Objects;
 
 public class JsonParser {
+
+    private int indent = 2;
+    private boolean pretty = false;
+
+    private static JsonParser instance;
+
+    public JsonParser(int indent, boolean pretty) {
+        if(instance() != null) {
+            throw new IllegalStateException("Can only initialize one JsonParser per program, please use JsonParser.instance()");
+        }
+        instance = this;
+        this.indent = indent;
+        this.pretty = pretty;
+    }
 
     public static LinkedList<Character> toTokenList(String input) {
         LinkedList<Character> result = new LinkedList<>();
@@ -19,13 +31,30 @@ public class JsonParser {
         return result;
     }
 
-    public static void prettyPrint(String json) throws Exception {
-        System.out.println(Parser.parse(Lexer.lexer(toTokenList(json))));
+    public void print(String json) throws Exception {
+        String result = parse(json).stringify(null, 0, isPretty(), indent());
+        System.out.println(result);
     }
-    public static JsonComponent parse(String json) throws Exception {
+    public void printFile(String file) throws Exception {
+        String result = parseFile(file).stringify(null, 0, isPretty(), indent());
+        System.out.println(result);
+    }
+    public JsonComponent parse(String json) throws Exception {
         return Parser.parse(Lexer.lexer(toTokenList(json)));
     }
-    public static JsonComponent parseFile(String file) throws Exception {
+    public JsonComponent parseFile(String file) throws Exception {
         return Parser.parse(Lexer.lexer(toTokenList(FileUtil.readFile(file))));
+    }
+
+    public int indent() {
+        return indent;
+    }
+
+    public boolean isPretty() {
+        return pretty;
+    }
+
+    public static JsonParser instance() {
+        return instance;
     }
 }

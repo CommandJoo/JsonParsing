@@ -32,15 +32,27 @@ public class JsonObject extends JsonComponent{
     }
 
     @Override
-    public String stringify(String keyName, int indent) {
+    public String stringify(String keyName, int level, boolean pretty, int indent) {
         StringBuilder str = new StringBuilder();
-        str.append("  ".repeat(indent)).append((keyName != null) ? "\""+keyName+"\": " : "").append("{\n");
+        //added necessary amount of space
+        String indentation = " ".repeat(indent);
+        String finalIndentation = pretty ? indentation.repeat(level) : "";
+        str.append(finalIndentation);
+        //added key if not null
+        str.append((keyName != null) ? "\""+keyName+"\":" : "");
+        str.append(pretty && keyName != null ? " " : "");//space after colon
+        str.append("{");
+        str.append(pretty ? "\n" : "");
+
         int count = 0;
         for(String key : content().keySet()) {
             count++;
-            str.append(get(key).stringify(key, indent+1)).append(count < content().keySet().size() ? ", " : "").append("\n");
+            str.append(get(key).stringify(key, level+1, pretty, indent));
+            str.append(count < content().keySet().size() ? "," : "");
+            str.append(pretty ? "\n" : "");
         }
-        str.append("  ".repeat(indent)).append("}");
+        str.append(finalIndentation);
+        str.append("}");
         return str.toString();
     }
 }
