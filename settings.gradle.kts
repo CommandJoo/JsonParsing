@@ -1,2 +1,2 @@
-rootProject.name = "JsonParer"
+rootProject.name = "JsonParser"
 
